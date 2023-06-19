@@ -1,7 +1,6 @@
 plugins {
     id("su.nexmedia.project-conventions")
     id("net.kyori.indra") version "2.1.1"
-    `maven-publish`
 }
 
 description = "NexEngineAPI"
