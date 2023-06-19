@@ -1,14 +1,16 @@
 plugins {
     id("su.nexmedia.project-conventions")
-    id("cc.mewcraft.publishing-conventions")
-    alias(libs.plugins.indra)
+    id("net.kyori.indra") version "2.1.1"
 }
 
 description = "NexEngineAPI"
 
+repositories {
+    maven("https://repo.papermc.io/repository/maven-public/")
+}
+
 dependencies {
-    compileOnly(libs.server.paper)
-    compileOnlyApi(libs.mewcore)
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 }
 
 indra {

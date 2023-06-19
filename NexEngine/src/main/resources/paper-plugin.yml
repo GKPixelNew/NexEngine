@@ -8,9 +8,6 @@ description: ${description}
 load-before: [ ]
 load-after: [ ]
 dependencies:
-  - name: MewCore
-    required: true
-    bootstrap: false
   - name: Vault
     required: false
     bootstrap: false

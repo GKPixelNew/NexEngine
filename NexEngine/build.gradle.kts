@@ -1,17 +1,20 @@
 plugins {
     id("su.nexmedia.project-conventions")
-    id("cc.mewcraft.publishing-conventions")
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.indra)
+    id("net.kyori.indra") version "2.1.1"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 description = "NexEngine"
+
+repositories {
+    maven("https://repo.papermc.io/repository/maven-public/")
+}
 
 dependencies {
     api(project(":NexEngineAPI"))
 
     // server api
-    compileOnly(libs.server.paper)
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
     // nms modules
     api(project(":NMS"))
@@ -61,17 +64,6 @@ tasks {
                 "description" to project.description
             ))
         }
-    }
-    register("deployJar") {
-        doLast {
-            exec {
-                commandLine("rsync", shadowJar.get().archiveFile.get().asFile.absoluteFile, "dev:data/dev/jar")
-            }
-        }
-    }
-    register("deployJarFresh") {
-        dependsOn(build)
-        finalizedBy(named("deployJar"))
     }
 }
 

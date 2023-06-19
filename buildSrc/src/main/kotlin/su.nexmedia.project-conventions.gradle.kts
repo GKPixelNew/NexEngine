@@ -1,6 +1,5 @@
 plugins {
-    id("cc.mewcraft.java-conventions")
-    id("cc.mewcraft.repository-conventions")
+    java
 }
 
 group = "su.nexmedia"

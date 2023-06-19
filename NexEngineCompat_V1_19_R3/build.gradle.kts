@@ -1,7 +1,7 @@
 plugins {
     id("su.nexmedia.project-conventions")
-    alias(libs.plugins.paperweight.userdev)
-    alias(libs.plugins.indra)
+    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("net.kyori.indra") version "2.1.1"
 }
 
 description = "NexEngineCompat_V1_19_R3"
