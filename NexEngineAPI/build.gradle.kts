@@ -16,11 +16,3 @@ dependencies {
 indra {
     javaVersions().target(17)
 }
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
-}
