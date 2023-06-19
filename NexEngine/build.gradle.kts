@@ -24,6 +24,8 @@ dependencies {
     // libs to be shaded
     compileOnly("io.netty:netty-all:4.1.86.Final")
     compileOnly("org.xerial:sqlite-jdbc:3.40.0.0")
+    compileOnly("com.zaxxer:HikariCP:5.0.1")
+    compileOnly("com.mojang:authlib:3.11.49")
 
     // code that requires 3rd plugin dependencies
     // we put it in a separate module to avoid dependency pollution
