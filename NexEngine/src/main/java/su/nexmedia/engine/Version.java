@@ -11,6 +11,7 @@ public enum Version {
     V1_19_R1("1.19.2"),
     V1_19_R2("1.19.3"),
     V1_19_R3("1.19.4"),
+    V1_20_R1("1.20.1"),
     ;
 
     private final String localized;

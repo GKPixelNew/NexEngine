@@ -20,6 +20,7 @@ dependencies {
     api(project(":NMS"))
     implementation(project(":NexEngineCompat_V1_18_R2", configuration = "reobf"))
     implementation(project(":NexEngineCompat_V1_19_R3", configuration = "reobf"))
+    implementation(project(":NexEngineCompat_V1_20_R1", configuration = "reobf"))
 
     // libs to be shaded
     compileOnly("io.netty:netty-all:4.1.86.Final")

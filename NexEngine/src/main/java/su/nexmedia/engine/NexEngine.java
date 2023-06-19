@@ -51,6 +51,7 @@ public class NexEngine extends NexPlugin<NexEngine> {
             this.nms = switch (Version.CURRENT) {
                 case V1_18_R2 -> new V1_18_R2();
                 case V1_19_R3 -> new V1_19_R3();
+                case V1_20_R1 -> new V1_20_R1();
                 default -> throw new IllegalStateException("unsupported NMS version");
             };
             this.info("Loaded NMS version: " + Version.CURRENT.name());
