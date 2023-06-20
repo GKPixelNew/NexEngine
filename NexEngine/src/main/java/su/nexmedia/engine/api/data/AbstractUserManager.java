@@ -1,5 +1,6 @@
 package su.nexmedia.engine.api.data;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -182,7 +183,7 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
-        public void onUserLogin(AsyncPlayerPreLoginEvent e) throws SQLException {
+        public void onUserLogin(AsyncPlayerPreLoginEvent e) {
             if (e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) return;
 
             UUID uuid = e.getUniqueId();
@@ -199,7 +200,7 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
             }
 
             if (user == null) {
-                e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Unable to load your user data.");
+                e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.text("Unable to load your user data."));
             }
         }
 

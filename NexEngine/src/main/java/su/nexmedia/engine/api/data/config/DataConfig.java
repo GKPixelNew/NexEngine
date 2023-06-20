@@ -50,26 +50,33 @@ public class DataConfig {
                 "Database user password.")
             .read(cfg);
         this.mysqlHost = JOption.create(path + "MySQL.Host", "localhost:3306",
-                "Database host address. Like http://127.0.0.1:3306/")
-            .read(cfg);
+                        "Database host address. Like http://127.0.0.1:3306/")
+                .read(cfg);
         this.mysqlBase = JOption.create(path + "MySQL.Database", "minecraft",
-                "MySQL database name, where plugin tables will be created.")
-            .read(cfg);
+                        "MySQL database name, where plugin tables will be created.")
+                .read(cfg);
 
         this.sqliteFilename = JOption.create(path + "SQLite.FileName", "data.db",
-                "File name for the database file.",
-                "Actually it's a path to the file, so you can use directories here.")
-            .read(cfg);
+                        "File name for the database file.",
+                        "Actually it's a path to the file, so you can use directories here.")
+                .read(cfg);
+
+        this.mongoConnectionString = JOption.create(path + "MongoDB.ConnectionString", "mongodb://localhost:27017",
+                        "MongoDB connection string.")
+                .read(cfg);
+        this.mongoDatabaseName = JOption.create(path + "MongoDB.Database", "minecraft",
+                        "MongoDB database name, where plugin tables will be created.")
+                .read(cfg);
 
         path = "Database.Purge.";
         this.purgeEnabled = JOption.create(path + "Enabled", false,
-                "Enables/Disables purge feature.",
-                "Purge will remove all records from the plugin tables that are 'old' enough.")
-            .read(cfg);
+                        "Enables/Disables purge feature.",
+                        "Purge will remove all records from the plugin tables that are 'old' enough.")
+                .read(cfg);
         this.purgePeriod = JOption.create(path + "For_Period", 60,
-                "Sets maximal 'age' for the database records before they will be purged.",
-                "This option may have different behavior depends on the plugin.",
-                "By default it's days of inactivity for the plugin users.")
+                        "Sets maximal 'age' for the database records before they will be purged.",
+                        "This option may have different behavior depends on the plugin.",
+                        "By default it's days of inactivity for the plugin users.")
             .read(cfg);
 
         cfg.saveChanges();

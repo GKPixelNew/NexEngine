@@ -33,6 +33,11 @@ public abstract class AbstractSQLDataHandler<P extends NexPlugin<P>> extends Abs
     }
 
     @Override
+    protected void onLoad() {
+        super.onLoad();
+    }
+
+    @Override
     protected void onShutdown() {
         super.onShutdown();
         this.getConnector().close();

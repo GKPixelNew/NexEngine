@@ -38,6 +38,11 @@ public abstract class AbstractUserDataHandler<P extends NexPlugin<P>, U extends 
     }
 
     @Override
+    public void setup() {
+        super.setup();
+    }
+
+    @Override
     protected void onLoad() {
         super.onLoad();
         this.createUserTable();

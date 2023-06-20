@@ -27,7 +27,7 @@ public abstract class AbstractDataHandler<P extends NexPlugin<P>> extends Abstra
         super(plugin);
         AbstractDataHandler<P> root = this;
         this.handler = switch (config.storageType) {
-            case MONGODB -> new AbstractMongoDBDataHandler<P>(plugin, config) {
+            case MONGODB -> new AbstractMongoDBDataHandler<>(plugin, config) {
                 @Override
                 public void reload() {
                     root.reload();
@@ -73,7 +73,14 @@ public abstract class AbstractDataHandler<P extends NexPlugin<P>> extends Abstra
     }
 
     @Override
+    public void setup() {
+        super.setup();
+        this.onLoad();
+    }
+
+    @Override
     protected void onLoad() {
+        super.onLoad();
         this.handler.onLoad();
     }
 
