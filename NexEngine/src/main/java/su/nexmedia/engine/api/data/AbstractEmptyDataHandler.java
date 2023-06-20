@@ -19,6 +19,7 @@ import su.nexmedia.engine.api.manager.AbstractManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -136,12 +137,12 @@ public abstract class AbstractEmptyDataHandler<P extends NexPlugin<P>> extends A
     public abstract boolean contains(@NotNull String table, @NotNull List<SQLColumn> columns, @NotNull SQLCondition... conditions);
 
     @NotNull
-    public abstract <T> Optional<T> load(@NotNull String table, @NotNull Function<List<?>, T> function,
+    public abstract <T> Optional<T> load(@NotNull String table, @NotNull Function<Map<String, ?>, T> function,
                                          @NotNull List<SQLColumn> columns,
                                          @NotNull List<SQLCondition> conditions) throws SQLException;
 
     @NotNull
-    public abstract <T> List<T> load(@NotNull String table, @NotNull Function<List<?>, T> dataFunction,
+    public abstract <T> List<T> load(@NotNull String table, @NotNull Function<Map<String, ?>, T> dataFunction,
                                      @NotNull List<SQLColumn> columns,
                                      @NotNull List<SQLCondition> conditions,
                                      int amount) throws SQLException;

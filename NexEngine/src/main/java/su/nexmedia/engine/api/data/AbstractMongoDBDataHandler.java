@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -177,7 +178,7 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
     }
 
     @NotNull
-    public <T> Optional<T> load(@NotNull String table, @NotNull Function<List<?>, T> function,
+    public <T> Optional<T> load(@NotNull String table, @NotNull Function<Map<String, ?>, T> function,
                                 @NotNull List<SQLColumn> columns,
                                 @NotNull List<SQLCondition> conditions) throws SQLException {
         List<T> list = this.load(table, function, columns, conditions, 1);
@@ -185,18 +186,14 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
     }
 
     @NotNull
-    public <T> List<T> load(@NotNull String table, @NotNull Function<List<?>, T> dataFunction,
+    public <T> List<T> load(@NotNull String table, @NotNull Function<Map<String, ?>, T> dataFunction,
                             @NotNull List<SQLColumn> columns,
                             @NotNull List<SQLCondition> conditions,
                             int amount) throws SQLException {
         List<T> list = new ArrayList<>();
         FindIterable<Document> documents = database.getCollection(table).find(generateFilters(conditions.toArray(new SQLCondition[0])));
         for (Document document : documents) {
-            List<Object> values = new ArrayList<>();
-            for (SQLColumn column : columns) {
-                values.add(document.get(column.getName()));
-            }
-            list.add(dataFunction.apply(values));
+            list.add(dataFunction.apply(document));
         }
         return list;
     }

@@ -5,11 +5,7 @@ import su.nexmedia.engine.api.data.connection.AbstractDataConnector;
 import su.nexmedia.engine.api.data.sql.*;
 import su.nexmedia.engine.api.data.sql.column.ColumnType;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,10 +13,10 @@ public final class SelectQueryExecutor<T> extends SQLExecutor<List<T>> {
 
     private final List<SQLColumn> columns;
     private final List<SQLCondition> wheres;
-    private final Function<List<?>, T> dataFunction;
+    private final Function<Map<String, ?>, T> dataFunction;
     private int amount;
 
-    private SelectQueryExecutor(@NotNull String table, @NotNull Function<List<?>, T> dataFunction) {
+    private SelectQueryExecutor(@NotNull String table, @NotNull Function<Map<String, ?>, T> dataFunction) {
         super(table);
         this.columns = new ArrayList<>();
         this.wheres = new ArrayList<>();
@@ -29,7 +25,7 @@ public final class SelectQueryExecutor<T> extends SQLExecutor<List<T>> {
     }
 
     @NotNull
-    public static <T> SelectQueryExecutor<T> builder(@NotNull String table, @NotNull Function<List<?>, T> dataFunction) {
+    public static <T> SelectQueryExecutor<T> builder(@NotNull String table, @NotNull Function<Map<String, ?>, T> dataFunction) {
         return new SelectQueryExecutor<>(table, dataFunction);
     }
 

@@ -14,10 +14,7 @@ import su.nexmedia.engine.api.data.sql.executor.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 public abstract class AbstractSQLDataHandler<P extends NexPlugin<P>> extends AbstractEmptyDataHandler<P> {
@@ -114,7 +111,7 @@ public abstract class AbstractSQLDataHandler<P extends NexPlugin<P>> extends Abs
     }
 
     @NotNull
-    public <T> Optional<T> load(@NotNull String table, @NotNull Function<List<?>, T> function,
+    public <T> Optional<T> load(@NotNull String table, @NotNull Function<Map<String, ?>, T> function,
                                 @NotNull List<SQLColumn> columns,
                                 @NotNull List<SQLCondition> conditions) {
         List<T> list = this.load(table, function, columns, conditions, 1);
@@ -122,7 +119,7 @@ public abstract class AbstractSQLDataHandler<P extends NexPlugin<P>> extends Abs
     }
 
     @NotNull
-    public <T> List<T> load(@NotNull String table, @NotNull Function<List<?>, T> dataFunction,
+    public <T> List<T> load(@NotNull String table, @NotNull Function<Map<String, ?>, T> dataFunction,
                             @NotNull List<SQLColumn> columns,
                             @NotNull List<SQLCondition> conditions,
                             int amount) {
