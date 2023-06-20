@@ -1,7 +1,5 @@
 package su.nexmedia.engine.api.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCommandException;
@@ -12,10 +10,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import com.mongodb.jdbc.MongoResultSet;
-import com.zaxxer.hikari.pool.HikariProxyResultSet;
 import org.bson.Document;
-import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
@@ -24,20 +19,17 @@ import org.jetbrains.annotations.Nullable;
 import su.nexmedia.engine.NexPlugin;
 import su.nexmedia.engine.api.data.config.DataConfig;
 import su.nexmedia.engine.api.data.connection.AbstractDataConnector;
-import su.nexmedia.engine.api.data.connection.ConnectorMySQL;
-import su.nexmedia.engine.api.data.connection.ConnectorSQLite;
 import su.nexmedia.engine.api.data.sql.SQLColumn;
 import su.nexmedia.engine.api.data.sql.SQLCondition;
-import su.nexmedia.engine.api.data.sql.SQLQueries;
 import su.nexmedia.engine.api.data.sql.SQLValue;
-import su.nexmedia.engine.api.data.sql.executor.*;
 import su.nexmedia.engine.api.data.task.DataSaveTask;
 import su.nexmedia.engine.api.data.task.DataSynchronizationTask;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -138,7 +130,8 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
     public void createTable(@NotNull String table, @NotNull List<SQLColumn> columns) {
         try {
             database.createCollection(table);
-        } catch (MongoCommandException ignored) {} // When there are duplicate tables
+        } catch (MongoCommandException ignored) {
+        } // When there are duplicate tables
     }
 
     public void renameTable(@NotNull String from, @NotNull String to) {
@@ -175,7 +168,8 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
         for (SQLCondition condition : conditions) {
             filters.add(switch (condition.getType()) {
                 case EQUAL -> Filters.eq(condition.getValue().getColumn().getName(), condition.getValue().getValue());
-                case NOT_EQUAL -> Filters.ne(condition.getValue().getColumn().getName(), condition.getValue().getValue());
+                case NOT_EQUAL ->
+                        Filters.ne(condition.getValue().getColumn().getName(), condition.getValue().getValue());
                 case GREATER -> Filters.gt(condition.getValue().getColumn().getName(), condition.getValue().getValue());
                 case SMALLER -> Filters.lt(condition.getValue().getColumn().getName(), condition.getValue().getValue());
             });
