@@ -1,5 +1,6 @@
 package su.nexmedia.engine.api.data;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -11,10 +12,11 @@ import su.nexmedia.engine.api.data.serialize.ItemStackSerializer;
 import su.nexmedia.engine.api.data.sql.SQLColumn;
 import su.nexmedia.engine.api.data.sql.SQLCondition;
 import su.nexmedia.engine.api.data.sql.SQLValue;
+import su.nexmedia.engine.api.data.task.DataSaveTask;
+import su.nexmedia.engine.api.data.task.DataSynchronizationTask;
 import su.nexmedia.engine.api.manager.AbstractManager;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,9 @@ import java.util.function.Function;
 
 public abstract class AbstractEmptyDataHandler<P extends NexPlugin<P>> extends AbstractManager<P> {
     protected final DataConfig config;
+    protected Gson gson;
+    private DataSynchronizationTask<P> synchronizationTask;
+    private DataSaveTask<P> saveTask;
 
     protected AbstractEmptyDataHandler(@NotNull P plugin) {
         this(plugin, new DataConfig(plugin.getConfig()));
@@ -40,10 +45,44 @@ public abstract class AbstractEmptyDataHandler<P extends NexPlugin<P>> extends A
     public abstract void onPurge();
 
     @Override
-    protected abstract void onLoad();
+    protected void onLoad() {
+        this.gson = this.registerAdapters(new GsonBuilder().setPrettyPrinting()).create();
+
+        if (this.config != null) {
+            if (this.getConfig().saveInterval > 0) {
+                this.saveTask = new DataSaveTask<>(this);
+                this.saveTask.start();
+            }
+
+            if (this.getConfig().syncInterval > 0) {
+                if (this.getDataType() != StorageType.SQLITE) {
+                    this.synchronizationTask = new DataSynchronizationTask<>(this);
+                    this.synchronizationTask.start();
+                    this.plugin.info("Enabled data synchronization with " + config.syncInterval + " seconds interval.");
+                } else {
+                    this.plugin.warn("Data synchronization is useless for local databases (SQLite). It will be disabled.");
+                }
+            }
+
+            if (this.getConfig().purgeEnabled && this.getConfig().purgePeriod > 0) {
+                this.onPurge();
+            }
+        }
+    }
 
     @Override
-    protected abstract void onShutdown();
+    protected void onShutdown() {
+        if (this.synchronizationTask != null) {
+            this.synchronizationTask.stop();
+            this.synchronizationTask = null;
+        }
+        if (this.saveTask != null) {
+            this.saveTask.stop();
+            this.saveTask = null;
+        }
+        this.onSynchronize();
+        this.onSave();
+    }
 
     @NotNull
     public DataConfig getConfig() {

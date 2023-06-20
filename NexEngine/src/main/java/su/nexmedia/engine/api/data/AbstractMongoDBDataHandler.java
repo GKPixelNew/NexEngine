@@ -37,6 +37,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends AbstractEmptyDataHandler<P> {
     protected final DataConfig config;
+    private MongoClient client;
     private MongoDatabase database;
 
     private DataSynchronizationTask<P> synchronizationTask;
@@ -50,22 +51,8 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
 
     @Override
     protected void onLoad() {
+        super.onLoad();
         if (this.config != null) {
-            if (this.getConfig().saveInterval > 0) {
-                this.saveTask = new DataSaveTask<>(this);
-                this.saveTask.start();
-            }
-
-            if (this.getConfig().syncInterval > 0) {
-                if (this.getDataType() != StorageType.SQLITE) {
-                    this.synchronizationTask = new DataSynchronizationTask<>(this);
-                    this.synchronizationTask.start();
-                    this.plugin.info("Enabled data synchronization with " + config.syncInterval + " seconds interval.");
-                } else {
-                    this.plugin.warn("Data synchronization is useless for local databases (SQLite). It will be disabled.");
-                }
-            }
-
             if (this.getConfig().purgeEnabled && this.getConfig().purgePeriod > 0) {
                 this.onPurge();
             }
@@ -78,25 +65,17 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
                     .retryWrites(true)
                     .codecRegistry(pojoCodecRegistry)
                     .build();
-            MongoClient client = MongoClients.create(settings);
-            database = client.getDatabase(this.config.mongoDatabaseName);
-        } else {
-            this.plugin.error("Data config is null!");
+            this.client = MongoClients.create(settings);
+            this.database = client.getDatabase(this.config.mongoDatabaseName);
         }
     }
 
     @Override
     protected void onShutdown() {
-        if (this.synchronizationTask != null) {
-            this.synchronizationTask.stop();
-            this.synchronizationTask = null;
+        super.onShutdown();
+        if (this.client != null) {
+            this.client.close();
         }
-        if (this.saveTask != null) {
-            this.saveTask.stop();
-            this.saveTask = null;
-        }
-        this.onSynchronize();
-        this.onSave();
     }
 
     @NotNull

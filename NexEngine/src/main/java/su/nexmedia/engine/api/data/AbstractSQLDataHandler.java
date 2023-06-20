@@ -1,7 +1,5 @@
 package su.nexmedia.engine.api.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import su.nexmedia.engine.NexPlugin;
 import su.nexmedia.engine.api.data.config.DataConfig;
@@ -13,11 +11,8 @@ import su.nexmedia.engine.api.data.sql.SQLCondition;
 import su.nexmedia.engine.api.data.sql.SQLQueries;
 import su.nexmedia.engine.api.data.sql.SQLValue;
 import su.nexmedia.engine.api.data.sql.executor.*;
-import su.nexmedia.engine.api.data.task.DataSaveTask;
-import su.nexmedia.engine.api.data.task.DataSynchronizationTask;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,10 +23,6 @@ import java.util.function.Function;
 public abstract class AbstractSQLDataHandler<P extends NexPlugin<P>> extends AbstractEmptyDataHandler<P> {
     protected final DataConfig config;
     protected final AbstractDataConnector connector;
-    protected Gson gson;
-
-    private DataSynchronizationTask<P> synchronizationTask;
-    private DataSaveTask<P> saveTask;
 
     protected AbstractSQLDataHandler(@NotNull P plugin, @NotNull DataConfig config) {
         super(plugin);
@@ -45,43 +36,8 @@ public abstract class AbstractSQLDataHandler<P extends NexPlugin<P>> extends Abs
     }
 
     @Override
-    protected void onLoad() {
-        this.gson = this.registerAdapters(new GsonBuilder().setPrettyPrinting()).create();
-
-        if (this.config != null) {
-            if (this.getConfig().saveInterval > 0) {
-                this.saveTask = new DataSaveTask<>(this);
-                this.saveTask.start();
-            }
-
-            if (this.getConfig().syncInterval > 0) {
-                if (this.getDataType() != StorageType.SQLITE) {
-                    this.synchronizationTask = new DataSynchronizationTask<>(this);
-                    this.synchronizationTask.start();
-                    this.plugin.info("Enabled data synchronization with " + config.syncInterval + " seconds interval.");
-                } else {
-                    this.plugin.warn("Data synchronization is useless for local databases (SQLite). It will be disabled.");
-                }
-            }
-
-            if (this.getConfig().purgeEnabled && this.getConfig().purgePeriod > 0) {
-                this.onPurge();
-            }
-        }
-    }
-
-    @Override
     protected void onShutdown() {
-        if (this.synchronizationTask != null) {
-            this.synchronizationTask.stop();
-            this.synchronizationTask = null;
-        }
-        if (this.saveTask != null) {
-            this.saveTask.stop();
-            this.saveTask = null;
-        }
-        this.onSynchronize();
-        this.onSave();
+        super.onShutdown();
         this.getConnector().close();
     }
 
