@@ -15,6 +15,8 @@ public class NexEngineLoader implements PluginLoader {
         MavenLibraryResolver resolver = new MavenLibraryResolver();
         resolver.addDependency(new Dependency(new DefaultArtifact("com.zaxxer:HikariCP:5.0.1"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("it.unimi.dsi:fastutil:8.5.11"), null));
+        resolver.addDependency(new Dependency(new DefaultArtifact("org.mongodb:mongodb-driver-sync:4.9.1"), null));
+        resolver.addDependency(new Dependency(new DefaultArtifact("org.mongodb:mongodb-jdbc:2.0.2"), null));
         resolver.addRepository(new RemoteRepository.Builder("central", "default", "https://repo1.maven.org/maven2/").build());
         builder.addLibrary(resolver);
     }

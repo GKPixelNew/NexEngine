@@ -27,6 +27,8 @@ dependencies {
     compileOnly("org.xerial:sqlite-jdbc:3.40.0.0")
     compileOnly("com.zaxxer:HikariCP:5.0.1")
     compileOnly("com.mojang:authlib:3.11.49")
+    compileOnly("org.mongodb:mongodb-driver-sync:4.9.1")
+    compileOnly("org.mongodb:mongodb-jdbc:2.0.2")
 
     // code that requires 3rd plugin dependencies
     // we put it in a separate module to avoid dependency pollution

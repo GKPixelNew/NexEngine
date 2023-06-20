@@ -12,6 +12,7 @@ import su.nexmedia.engine.api.manager.AbstractListener;
 import su.nexmedia.engine.api.manager.AbstractManager;
 import su.nexmedia.engine.hooks.Hooks;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,7 +41,14 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
     protected abstract U createData(@NotNull UUID uuid, @NotNull String name);
 
     public void loadOnlineUsers() {
-        this.plugin.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).forEach(this::getUserData);
+        this.plugin.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).forEach(p -> {
+            try {
+                this.getUserData(p);
+            } catch (SQLException e) {
+                this.plugin.error("Failed to load user data for '" + p + "'!");
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -52,7 +60,7 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
      * @return User data for the specified player.
      */
     @NotNull
-    public final U getUserData(@NotNull Player player) {
+    public final U getUserData(@NotNull Player player) throws SQLException {
         if (Hooks.isCitizensNPC(player)) {
             throw new IllegalStateException("Could not load user data from an NPC!");
         }
@@ -77,7 +85,7 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
      * @return User data for the specified user name.
      */
     @Nullable
-    public final U getUserData(@NotNull String name) {
+    public final U getUserData(@NotNull String name) throws SQLException {
         Player player = this.plugin.getServer().getPlayer(name);
         if (player != null) return this.getUserData(player);
 
@@ -103,7 +111,7 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
      * @return User data for the specified uuid.
      */
     @Nullable
-    public final U getUserData(@NotNull UUID uuid) {
+    public final U getUserData(@NotNull UUID uuid) throws SQLException {
         U user = this.getUserLoaded(uuid);
         if (user != null) return user;
 
@@ -117,11 +125,23 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
     }
 
     public final CompletableFuture<U> getUserDataAsync(@NotNull String name) {
-        return CompletableFuture.supplyAsync(() -> this.getUserData(name));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return this.getUserData(name);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public final CompletableFuture<U> getUserDataAsync(@NotNull UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> this.getUserData(uuid));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return this.getUserData(uuid);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public final void unloadUser(@NotNull Player player) {
@@ -170,7 +190,7 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
-        public void onUserLogin(AsyncPlayerPreLoginEvent e) {
+        public void onUserLogin(AsyncPlayerPreLoginEvent e) throws SQLException {
             if (e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) return;
 
             UUID uuid = e.getUniqueId();

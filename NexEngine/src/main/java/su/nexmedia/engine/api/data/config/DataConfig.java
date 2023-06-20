@@ -23,6 +23,9 @@ public class DataConfig {
 
     public String sqliteFilename;
 
+    public String mongoConnectionString;
+    public String mongoDatabaseName;
+
     public DataConfig(@NotNull JYML cfg) {
         String path = "Database.";
         this.storageType = JOption.create(path + "Type", StorageType.class, StorageType.SQLITE,

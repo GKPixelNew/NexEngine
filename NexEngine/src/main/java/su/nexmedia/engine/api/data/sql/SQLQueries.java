@@ -77,7 +77,7 @@ public class SQLQueries {
     @NotNull
     public static <T> List<@NotNull T> executeQuery(@NotNull AbstractDataConnector connector, @NotNull String sql,
         @NotNull Collection<String> values1,
-        @NotNull Function<ResultSet, T> dataFunction,
+        @NotNull Function<List<?>, T> dataFunction,
         int amount) {
 
         List<T> list = new ArrayList<>();
@@ -91,7 +91,11 @@ public class SQLQueries {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next() && (amount < 0 || list.size() < amount)) {
-                list.add(dataFunction.apply(resultSet));
+                List<Object> data = new ArrayList<>();
+                for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); index++) {
+                    data.add(resultSet.getObject(index));
+                }
+                list.add(dataFunction.apply(data));
             }
             resultSet.close();
         } catch (SQLException e) {

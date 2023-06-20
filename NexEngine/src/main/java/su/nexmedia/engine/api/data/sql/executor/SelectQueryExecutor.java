@@ -17,10 +17,10 @@ public final class SelectQueryExecutor<T> extends SQLExecutor<List<T>> {
 
     private final List<SQLColumn> columns;
     private final List<SQLCondition> wheres;
-    private final Function<ResultSet, T> dataFunction;
+    private final Function<List<?>, T> dataFunction;
     private int amount;
 
-    private SelectQueryExecutor(@NotNull String table, @NotNull Function<ResultSet, T> dataFunction) {
+    private SelectQueryExecutor(@NotNull String table, @NotNull Function<List<?>, T> dataFunction) {
         super(table);
         this.columns = new ArrayList<>();
         this.wheres = new ArrayList<>();
@@ -29,7 +29,7 @@ public final class SelectQueryExecutor<T> extends SQLExecutor<List<T>> {
     }
 
     @NotNull
-    public static <T> SelectQueryExecutor<T> builder(@NotNull String table, @NotNull Function<ResultSet, T> dataFunction) {
+    public static <T> SelectQueryExecutor<T> builder(@NotNull String table, @NotNull Function<List<?>, T> dataFunction) {
         return new SelectQueryExecutor<>(table, dataFunction);
     }
 

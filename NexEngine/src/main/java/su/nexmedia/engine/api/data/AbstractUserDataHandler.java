@@ -12,7 +12,7 @@ import su.nexmedia.engine.api.data.sql.SQLValue;
 import su.nexmedia.engine.api.data.sql.column.ColumnType;
 import su.nexmedia.engine.utils.TimeUtil;
 
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,29 +99,29 @@ public abstract class AbstractUserDataHandler<P extends NexPlugin<P>, U extends 
     protected abstract List<SQLValue> getSaveColumns(@NotNull U user);
 
     @NotNull
-    protected abstract Function<ResultSet, U> getFunctionToUser();
+    protected abstract Function<List<?>, U> getFunctionToUser();
 
     @NotNull
-    public List<U> getUsers() {
+    public List<U> getUsers() throws SQLException {
         return this.load(this.tableUsers, this.getFunctionToUser(), Collections.emptyList(), Collections.emptyList(), -1);
     }
 
     @Nullable
-    public U getUser(@NotNull Player player) {
+    public U getUser(@NotNull Player player) throws SQLException {
         return this.getUser(player.getUniqueId());
     }
 
     @Nullable
-    public final U getUser(@NotNull String name) {
+    public final U getUser(@NotNull String name) throws SQLException {
         return this.load(this.tableUsers, this.getFunctionToUser(), this.getReadColumns(),
-            Collections.singletonList(SQLCondition.equal(COLUMN_USER_NAME.asLowerCase().toValue(name.toLowerCase())))
+                Collections.singletonList(SQLCondition.equal(COLUMN_USER_NAME.asLowerCase().toValue(name.toLowerCase())))
         ).orElse(null);
     }
 
     @Nullable
-    public final U getUser(@NotNull UUID uuid) {
+    public final U getUser(@NotNull UUID uuid) throws SQLException {
         return this.load(this.tableUsers, this.getFunctionToUser(), this.getReadColumns(),
-            Collections.singletonList(SQLCondition.equal(COLUMN_USER_ID.toValue(uuid)))
+                Collections.singletonList(SQLCondition.equal(COLUMN_USER_ID.toValue(uuid)))
         ).orElse(null);
     }
 
