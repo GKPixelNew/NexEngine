@@ -41,26 +41,18 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
     protected abstract U createData(@NotNull UUID uuid, @NotNull String name);
 
     public void loadOnlineUsers() {
-        this.plugin.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).forEach(p -> {
-            try {
-                this.getUserData(p);
-            } catch (SQLException e) {
-                this.plugin.error("Failed to load user data for '" + p + "'!");
-                e.printStackTrace();
-            }
-        });
+        this.plugin.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).forEach(this::getUserData);
     }
 
     /**
-     * Gets the preloaded user data for specified player. Throwns an exception if user data is not loaded for the
+     * Gets the preloaded user data for specified player. Throws an exception if user data is not loaded for the
      * player, because it have to be loaded on player login.
      *
      * @param player A player instance to get user data for.
-     *
      * @return User data for the specified player.
      */
     @NotNull
-    public final U getUserData(@NotNull Player player) throws SQLException {
+    public final U getUserData(@NotNull Player player) {
         if (Hooks.isCitizensNPC(player)) {
             throw new IllegalStateException("Could not load user data from an NPC!");
         }
@@ -85,15 +77,21 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
      * @return User data for the specified user name.
      */
     @Nullable
-    public final U getUserData(@NotNull String name) throws SQLException {
+    public final U getUserData(@NotNull String name) {
         Player player = this.plugin.getServer().getPlayer(name);
         if (player != null) return this.getUserData(player);
 
         U user = this.getUsersLoaded().stream().filter(userOff -> userOff.getName().equalsIgnoreCase(name))
-            .findFirst().orElse(null);
+                .findFirst().orElse(null);
         if (user != null) return user;
 
-        user = this.dataHolder.getData().getUser(name);
+        try {
+            user = this.dataHolder.getData().getUser(name);
+        } catch (SQLException e) {
+            this.plugin.error("Failed to load user data for '" + name + "'!");
+            e.printStackTrace();
+            return null;
+        }
         if (user != null) {
             user.onLoad();
             this.cache(user);
@@ -111,11 +109,17 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
      * @return User data for the specified uuid.
      */
     @Nullable
-    public final U getUserData(@NotNull UUID uuid) throws SQLException {
+    public final U getUserData(@NotNull UUID uuid) {
         U user = this.getUserLoaded(uuid);
         if (user != null) return user;
 
-        user = this.dataHolder.getData().getUser(uuid);
+        try {
+            user = this.dataHolder.getData().getUser(uuid);
+        } catch (SQLException e) {
+            this.plugin.error("Failed to load user data for '" + uuid + "'!");
+            e.printStackTrace();
+            return null;
+        }
         if (user != null) {
             user.onLoad();
             this.cache(user);
@@ -125,23 +129,11 @@ public abstract class AbstractUserManager<P extends NexPlugin<P>, U extends Abst
     }
 
     public final CompletableFuture<U> getUserDataAsync(@NotNull String name) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return this.getUserData(name);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> this.getUserData(name));
     }
 
     public final CompletableFuture<U> getUserDataAsync(@NotNull UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return this.getUserData(uuid);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> this.getUserData(uuid));
     }
 
     public final void unloadUser(@NotNull Player player) {
