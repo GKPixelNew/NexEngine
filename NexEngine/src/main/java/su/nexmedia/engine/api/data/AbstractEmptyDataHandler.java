@@ -51,15 +51,20 @@ public abstract class AbstractEmptyDataHandler<P extends NexPlugin<P>> extends A
 
         if (this.config != null) {
             if (this.getConfig().saveInterval > 0) {
-                this.saveTask = new DataSaveTask<>(this);
-                this.saveTask.start();
+                if (this.saveTask == null) {
+                    this.saveTask = new DataSaveTask<>(this);
+                    this.saveTask.start();
+                    this.plugin.info("Enabled data auto-save with " + config.saveInterval + " seconds interval.");
+                }
             }
 
             if (this.getConfig().syncInterval > 0) {
                 if (this.getDataType() != StorageType.SQLITE) {
-                    this.synchronizationTask = new DataSynchronizationTask<>(this);
-                    this.synchronizationTask.start();
-                    this.plugin.info("Enabled data synchronization with " + config.syncInterval + " seconds interval.");
+                    if (this.synchronizationTask == null) {
+                        this.synchronizationTask = new DataSynchronizationTask<>(this);
+                        this.synchronizationTask.start();
+                        this.plugin.info("Enabled data synchronization with " + config.syncInterval + " seconds interval.");
+                    }
                 } else {
                     this.plugin.warn("Data synchronization is useless for local databases (SQLite). It will be disabled.");
                 }
