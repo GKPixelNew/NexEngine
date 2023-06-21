@@ -138,7 +138,7 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
     public void insert(@NotNull String table, @NotNull List<SQLValue> values) {
         Document document = new Document();
         for (SQLValue value : values) {
-            document.append(value.getColumn().getName(), value.getValue());
+            document.append(value.getColumn().getName(), value.getColumn().getType().getConverter().apply(value.getValue()));
         }
         database.getCollection(table).insertOne(document);
     }
