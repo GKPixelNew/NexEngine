@@ -138,7 +138,7 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
     public void insert(@NotNull String table, @NotNull List<SQLValue> values) {
         Document document = new Document();
         for (SQLValue value : values) {
-            document.append(value.getColumn().getName(), value.getColumn().getType().getConverter().apply(value.getValue()));
+            document.append(value.getColumn().getName(), value.getConvertedValue());
         }
         database.getCollection(table).insertOne(document);
     }
@@ -147,11 +147,14 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
         List<Bson> filters = new ArrayList<>();
         for (SQLCondition condition : conditions) {
             filters.add(switch (condition.getType()) {
-                case EQUAL -> Filters.eq(condition.getValue().getColumn().getName(), condition.getValue().getValue());
+                case EQUAL ->
+                        Filters.eq(condition.getValue().getColumn().getName(), condition.getValue().getConvertedValue());
                 case NOT_EQUAL ->
-                        Filters.ne(condition.getValue().getColumn().getName(), condition.getValue().getValue());
-                case GREATER -> Filters.gt(condition.getValue().getColumn().getName(), condition.getValue().getValue());
-                case SMALLER -> Filters.lt(condition.getValue().getColumn().getName(), condition.getValue().getValue());
+                        Filters.ne(condition.getValue().getColumn().getName(), condition.getValue().getConvertedValue());
+                case GREATER ->
+                        Filters.gt(condition.getValue().getColumn().getName(), condition.getValue().getConvertedValue());
+                case SMALLER ->
+                        Filters.lt(condition.getValue().getColumn().getName(), condition.getValue().getConvertedValue());
             });
         }
         return Filters.and(filters);
@@ -160,7 +163,7 @@ public abstract class AbstractMongoDBDataHandler<P extends NexPlugin<P>> extends
     public void update(@NotNull String table, @NotNull List<SQLValue> values, @NotNull SQLCondition... conditions) {
         List<Bson> updates = new ArrayList<>();
         for (SQLValue value : values) {
-            updates.add(Updates.set(value.getColumn().getName(), value.getValue()));
+            updates.add(Updates.set(value.getColumn().getName(), value.getConvertedValue()));
         }
         database.getCollection(table).updateMany(generateFilters(conditions), Updates.combine(updates));
     }
