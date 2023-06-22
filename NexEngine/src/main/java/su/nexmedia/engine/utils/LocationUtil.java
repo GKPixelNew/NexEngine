@@ -85,21 +85,11 @@ public class LocationUtil {
 
     @NotNull
     public static Location getCenter(@NotNull Location location, boolean doVertical) {
-        float yaw = location.getYaw();
-        float pitch = location.getPitch();
-
-        double x = getRelativeCoord(location.getBlockX());
-        double y = doVertical ? getRelativeCoord(location.getBlockY()) : location.getBlockY();
-        double z = getRelativeCoord(location.getBlockZ());
-
-        location = new Location(location.getWorld(), x, y, z);
-        location.setYaw(yaw);
-        location.setPitch(pitch);
+        Location centerLoc = location.clone();
+        centerLoc.setX(location.getBlockX() + 0.5);
+        centerLoc.setY(location.getBlockY() + (doVertical ? 0.5 : 0));
+        centerLoc.setZ(location.getBlockZ() + 0.5);
         return location;
-    }
-
-    private static double getRelativeCoord(double cord) {
-        return cord < 0 ? cord - 0.5 : cord + 0.5;
     }
 
     @NotNull
