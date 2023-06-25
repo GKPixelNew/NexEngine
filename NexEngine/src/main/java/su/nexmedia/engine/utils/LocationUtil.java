@@ -80,15 +80,15 @@ public class LocationUtil {
 
     @NotNull
     public static Location getCenter(@NotNull Location location) {
-        return getCenter(location, true);
+        return location.toCenterLocation();
     }
 
     @NotNull
     public static Location getCenter(@NotNull Location location, boolean doVertical) {
-        Location centerLoc = location.clone();
-        centerLoc.setX(location.getBlockX() + 0.5);
-        centerLoc.setY(location.getBlockY() + (doVertical ? 0.5 : 0));
-        centerLoc.setZ(location.getBlockZ() + 0.5);
+        Location centerLoc = location.toCenterLocation();
+        if (!doVertical) {
+            centerLoc.setY(location.getY());
+        }
         return location;
     }
 
