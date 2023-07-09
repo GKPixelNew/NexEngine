@@ -65,7 +65,7 @@ public abstract class AbstractUserDataHandler<P extends NexPlugin<P>, U extends 
         }
 
         int on = this.dataHolder.getUserManager().getUsersLoadedMap().size();
-        this.plugin.info("Auto-save: Saved " + on + " online users | " + off + " offline users.");
+//        this.plugin.info("Auto-save: Saved " + on + " online users | " + off + " offline users.");
     }
 
     @Override
