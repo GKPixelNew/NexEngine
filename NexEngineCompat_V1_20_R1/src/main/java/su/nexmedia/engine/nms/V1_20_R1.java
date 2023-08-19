@@ -108,6 +108,6 @@ public class V1_20_R1 implements NMS {
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
         ClientboundOpenScreenPacket packet = new ClientboundOpenScreenPacket(serverPlayer.containerMenu.containerId, type, PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(title)));
         serverPlayer.connection.send(packet);
-        //player.updateInventory();
+        player.updateInventory();
     }
 }
