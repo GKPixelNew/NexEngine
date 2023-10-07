@@ -1,13 +1,11 @@
 plugins {
     id("su.nexmedia.project-conventions")
+    id("cc.mewcraft.publishing-conventions")
 }
 
 dependencies {
     compileOnly(libs.server.paper)
 
-    // core libs
-    compileOnlyApi(libs.mewcore)
-    // libs embedded in core
-    compileOnlyApi(libs.hikari)
-    compileOnlyApi(libs.authlib)
+    api(libs.hikari)
+    api(libs.authlib)
 }

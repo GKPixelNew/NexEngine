@@ -2,21 +2,20 @@ name: NexEngine
 main: su.nexmedia.engine.NexEngine
 version: ${version}
 api-version: "1.19"
-authors: [ NightExpress, Nailm ]
+authors: [ NightExpress ]
+contributors: [ Nailm ]
 description: ${description}
-load-before: [ ]
-load-after: [ ]
 dependencies:
   server:
     Vault:
       load: OMIT
       required: false
       join-classpath: true
-    MewCore:
-      load: OMIT
-      required: true
-      join-classpath: true
     MythicMobs:
       load: OMIT
       required: false
+      join-classpath: true
+    SpatulaItems:
+      load: BEFORE
+      required: true
       join-classpath: true

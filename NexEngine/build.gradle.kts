@@ -25,18 +25,6 @@ dependencies {
     implementation(project(":NexEngineCompat_V1_19_R3", configuration = "reobf"))
     implementation(project(":NexEngineCompat_V1_20_R1", configuration = "reobf"))
 
-    // libs to be shaded
-    compileOnly("org.xerial", "sqlite-jdbc", "3.42.+")
+    // support custom item from various plugins
+    compileOnly(libs.spatula.item)
 }
-
-// TODO remove plugin.yml
-/*bukkit {
-    main = "su.nexmedia.engine.NexEngine"
-    name = "NexEngine"
-    version = "${project.version}"
-    apiVersion = "1.17"
-    authors = listOf("NightExpress")
-    softDepend = listOf("Vault", "Citizens", "MythicMobs")
-    load = STARTUP
-    libraries = listOf("com.zaxxer:HikariCP:5.0.1", "it.unimi.dsi:fastutil:8.5.11")
-}*/

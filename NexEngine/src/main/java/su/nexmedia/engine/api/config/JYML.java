@@ -1,7 +1,5 @@
 package su.nexmedia.engine.api.config;
 
-import cc.mewcraft.mewcore.item.api.PluginItem;
-import cc.mewcraft.mewcore.item.api.PluginItemRegistry;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -27,6 +25,9 @@ import su.nexmedia.engine.api.menu.MenuItemType;
 import su.nexmedia.engine.api.placeholder.PlaceholderConstants;
 import su.nexmedia.engine.api.type.ClickType;
 import su.nexmedia.engine.utils.*;
+
+import cc.mewcraft.spatula.item.PluginItem;
+import cc.mewcraft.spatula.item.PluginItemRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -481,20 +482,21 @@ public class JYML extends YamlConfiguration {
     @Nullable
     public PluginItem<?> getPluginItem(@NotNull String path) {
         String reference = this.getString(path);
-        return PluginItemRegistry.get().fromReferenceNullable(reference);
+        if (reference == null) return null;
+        return PluginItemRegistry.INSTANCE.byReferenceOrNull(reference);
     }
 
     public void setPluginItem(@NotNull String path, @NotNull ItemStack item) {
-        PluginItem<?> pluginItem = PluginItemRegistry.get().fromItemStackNullable(item);
+        PluginItem<?> pluginItem = PluginItemRegistry.INSTANCE.byItemStackOrNull(item);
         if (pluginItem == null) {
-            NexEngine.get().warn("Failed to write plugin item reference at: " + path);
+            NexEngine.get().warn("Failed to write item reference at: " + path);
             return;
         }
-        this.set(path, pluginItem.asReference());
+        this.set(path, pluginItem.getReference());
     }
 
     public void setPluginItem(@NotNull String path, @NotNull PluginItem<?> item) {
-        this.set(path, item.asReference());
+        this.set(path, item.getReference());
     }
 
     @NotNull

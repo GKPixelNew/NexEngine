@@ -1,6 +1,6 @@
 plugins {
     id("su.nexmedia.project-conventions")
-    alias(libs.plugins.paperweight.userdev)
+    alias(libs.plugins.paperdev)
 }
 
 dependencies {
