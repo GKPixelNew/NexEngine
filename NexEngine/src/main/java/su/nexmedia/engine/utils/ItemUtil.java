@@ -58,7 +58,7 @@ public class ItemUtil {
         if (item.getType() != Material.PLAYER_HEAD) return;
         if (!(item.getItemMeta() instanceof SkullMeta meta)) return;
 
-        GameProfile profile = new GameProfile(EngineConfig.getIdForSkullTexture(value), null);
+        GameProfile profile = new GameProfile(EngineConfig.getIdForSkullTexture(value), "");
         profile.getProperties().put("textures", new Property("textures", value));
 
         Method method = Reflex.getMethod(meta.getClass(), "setProfile", GameProfile.class);
