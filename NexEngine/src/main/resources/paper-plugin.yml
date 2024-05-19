@@ -1,21 +1,21 @@
 name: NexEngine
 main: su.nexmedia.engine.NexEngine
-loader: su.nexmedia.engine.NexEngineLoader
 version: ${version}
-api-version: 1.19
-authors: [ NightExpress, Nailm ]
+api-version: "1.19"
+authors: [ NightExpress ]
+contributors: [ Nailm ]
 description: ${description}
-load-before: [ ]
-load-after: [ ]
-load: STARTUP
-
 dependencies:
-  - name: Vault
-    required: false
-    bootstrap: false
-  - name: Citizens
-    required: false
-    bootstrap: false
-  - name: MythicMobs
-    required: false
-    bootstrap: false
+  server:
+    Vault:
+      load: OMIT
+      required: false
+      join-classpath: true
+    MythicMobs:
+      load: OMIT
+      required: false
+      join-classpath: true
+    SpatulaItems:
+      load: BEFORE
+      required: true
+      join-classpath: true

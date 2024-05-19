@@ -16,22 +16,22 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class V1_20_R1 implements NMS {
 
-    @Override
-    @NotNull
-    public String getNBTTag(@NotNull ItemStack item) {
+    @Override public @NotNull String getNBTTag(@NotNull ItemStack item) {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         CompoundTag compound = nmsItem.getTag();
         return compound == null ? "null" : compound.toString();
     }
 
-    @Override
-    @Nullable
-    public String toBase64(@NotNull ItemStack item) {
+    @Override public @Nullable String toBase64(@NotNull ItemStack item) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
         CompoundTag nbtTagCompoundItem = new CompoundTag();
@@ -48,9 +48,7 @@ public class V1_20_R1 implements NMS {
         return new BigInteger(1, outputStream.toByteArray()).toString(32);
     }
 
-    @Override
-    @Nullable
-    public ItemStack fromBase64(@NotNull String data) {
+    @Override public @Nullable ItemStack fromBase64(@NotNull String data) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new BigInteger(data, 32).toByteArray());
 
         CompoundTag nbtTagCompoundRoot;
@@ -65,10 +63,7 @@ public class V1_20_R1 implements NMS {
         return CraftItemStack.asBukkitCopy(nmsItem);
     }
 
-    @Override
-    @NotNull
-    public ItemStack damageItem(@NotNull ItemStack item, int amount, @Nullable Player player) {
-        // CraftItemStack craftItem = (CraftItemStack) item;
+    @Override public @NotNull ItemStack damageItem(@NotNull ItemStack item, int amount, @Nullable Player player) {
         net.minecraft.world.item.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 
         ServerPlayer nmsPlayer = player != null ? ((CraftPlayer) player).getHandle() : null;

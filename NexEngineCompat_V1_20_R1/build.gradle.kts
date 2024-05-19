@@ -8,7 +8,7 @@ description = "NexEngineCompat_V1_20_R1"
 
 dependencies {
     compileOnly(project(":NMS"))
-    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
 tasks {

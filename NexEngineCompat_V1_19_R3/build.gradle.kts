@@ -4,8 +4,6 @@ plugins {
     id("net.kyori.indra") version "2.1.1"
 }
 
-description = "NexEngineCompat_V1_19_R3"
-
 dependencies {
     compileOnly(project(":NMS"))
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")

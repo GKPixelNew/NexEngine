@@ -4,17 +4,23 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-description = "NexEngine"
+project.ext.set("name", "NexEngine")
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
-    api(project(":NexEngineAPI"))
-
     // server api
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+
+    // the "api" module
+    // make it a separate module to avoid circular dependencies
+    api(project(":NexEngineAPI"))
+
+    // code that requires 3rd plugin dependencies
+    // we put it in a separate module to avoid dependency pollution
+    api(project(":NexEngineExt"))
 
     // nms modules
     api(project(":NMS"))

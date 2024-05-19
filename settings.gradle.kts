@@ -1,9 +1,12 @@
+// TODO https://stackoverflow.com/a/50153617 it looks like we can use `plugins {}` block here
+
 rootProject.name = "NexEnginePlugin"
 
-include(":NexEngineAPI")
-
-// The Paper plugin
+// The plugin
 include(":NexEngine")
+
+// Code that is somewhat standalone
+include(":NexEngineAPI")
 
 // Code related to random 3rd party plugins
 include(":NexEngineExt")
