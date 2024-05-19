@@ -15,7 +15,3 @@ dependencies:
       load: OMIT
       required: false
       join-classpath: true
-    SpatulaItems:
-      load: BEFORE
-      required: true
-      join-classpath: true
