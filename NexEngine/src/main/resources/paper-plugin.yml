@@ -5,6 +5,7 @@ api-version: "1.19"
 authors: [ NightExpress ]
 contributors: [ Nailm ]
 description: ${description}
+load: STARTUP
 dependencies:
   server:
     Vault:

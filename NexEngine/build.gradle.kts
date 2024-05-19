@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     // server api
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
     // the "api" module
     // make it a separate module to avoid circular dependencies
@@ -26,14 +26,14 @@ dependencies {
     api(project(":NMS"))
     implementation(project(":NexEngineCompat_V1_18_R2", configuration = "reobf"))
     implementation(project(":NexEngineCompat_V1_19_R3", configuration = "reobf"))
-    implementation(project(":NexEngineCompat_V1_20_R1", configuration = "reobf"))
+    implementation(project(":NexEngineCompat_V1_20_R3", configuration = "reobf"))
 
     // libs to be shaded
     compileOnly("io.netty:netty-all:4.1.86.Final")
     compileOnly("org.xerial:sqlite-jdbc:3.40.0.0")
     compileOnly("com.zaxxer:HikariCP:5.0.1")
     compileOnly("com.mojang:authlib:3.11.49")
-    compileOnly("org.mongodb:mongodb-driver-sync:4.9.1")
+    compileOnly("org.mongodb:mongodb-driver-sync:5.1.0")
 
     // code that requires 3rd plugin dependencies
     // we put it in a separate module to avoid dependency pollution
