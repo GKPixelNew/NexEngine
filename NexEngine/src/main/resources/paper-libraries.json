@@ -1,0 +1,9 @@
+{
+  "repositories": {
+    "MavenRepo": "https://repo.maven.apache.org/maven2/"
+  },
+  "dependencies": [
+    "com.zaxxer:HikariCP:5.0.1",
+    "org.mongodb:mongodb-driver-sync:5.1.0"
+  ]
+}

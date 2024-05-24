@@ -82,10 +82,10 @@ public class ItemUtil {
 
         Collection<Property> properties = profile.getProperties().get("textures");
         Optional<Property> opt = properties.stream().filter(prop ->
-            prop.getName().equalsIgnoreCase("textures") || prop.getSignature().equalsIgnoreCase("textures")
+                prop.name().equalsIgnoreCase("textures") || (prop.signature() != null && prop.signature().equalsIgnoreCase("textures"))
         ).findFirst();
 
-        return opt.map(Property::getValue).orElse(null);
+        return opt.map(Property::value).orElse(null);
     }
     //</editor-fold>
 

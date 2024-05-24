@@ -6,6 +6,7 @@ authors: [ NightExpress ]
 contributors: [ Nailm ]
 description: ${description}
 load: STARTUP
+has-open-classloader: true
 dependencies:
   server:
     Vault:

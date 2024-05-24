@@ -32,7 +32,7 @@ dependencies {
     compileOnly("io.netty:netty-all:4.1.86.Final")
     compileOnly("org.xerial:sqlite-jdbc:3.40.0.0")
     compileOnly("com.zaxxer:HikariCP:5.0.1")
-    compileOnly("com.mojang:authlib:3.11.49")
+    compileOnly("com.mojang:authlib:6.0.54")
     compileOnly("org.mongodb:mongodb-driver-sync:5.1.0")
 
     // code that requires 3rd plugin dependencies
