@@ -89,7 +89,7 @@ public class LocationUtil {
         centerLoc.setX(location.getBlockX() + 0.5);
         centerLoc.setY(location.getBlockY() + (doVertical ? 0.5 : 0));
         centerLoc.setZ(location.getBlockZ() + 0.5);
-        return location;
+        return centerLoc;
     }
 
     @NotNull
